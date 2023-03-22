@@ -1,0 +1,73 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementClickInterceptedException, NoSuchElementException
+import time
+import os
+
+MY_EMAIL = input("Whats's your Facebook Email?:")
+MY_PASSWORD = input("Whats your Facebook Password?:")
+
+driver_path = "C:/Users/simcy/OneDrive/Desktop/Development/chromedriver.exe"
+chrome_options = Options()
+chrome_options.add_experimental_option("detach", True)
+chrome_driver = webdriver.Chrome(service=Service(executable_path=driver_path),options=chrome_options)
+
+tinder_URL = "https://tinder.com/app/recs"
+chrome_driver.get(tinder_URL)
+main_page = chrome_driver.current_window_handle
+chrome_driver.maximize_window()
+
+time.sleep(2)
+
+log_in = chrome_driver.find_element(By.XPATH, '//*[@id="q-586956664"]/div/div[1]/div/main/div[1]/div/div/div/div/header/div/div[2]/div[2]/a/div[2]/div[2]')
+log_in.click()
+
+time.sleep(2)
+
+fb_login = chrome_driver.find_element(By.XPATH, '//*[@id="q1979629556"]/main/div/div/div[1]/div/div/div[3]/span/div[2]/button/div[2]/div[2]/div/div')
+fb_login.click()
+
+base_window = chrome_driver.window_handles[0]
+fb_login_page = chrome_driver.window_handles[1]
+chrome_driver.switch_to.window(fb_login_page)
+print(chrome_driver.title)
+
+time.sleep(5)
+FB_email_input = chrome_driver.find_element(By.XPATH, '//*[@id="email"]')
+FB_email_input.send_keys(MY_EMAIL)
+FB_password_input = chrome_driver.find_element(By.XPATH, '//*[@id="pass"]')
+FB_password_input.send_keys(MY_PASSWORD)
+
+time.sleep(5)
+
+FB_password_input.send_keys(Keys.ENTER)
+
+chrome_driver.switch_to.window(base_window)
+
+time.sleep(5)
+
+allow_location = chrome_driver.find_element(By.XPATH, '//*[@id="q1979629556"]/main/div/div/div/div[3]/button[1]/div[2]/div[2]')
+allow_location.click()
+no_notification = chrome_driver.find_element(By.XPATH, '//*[@id="q1979629556"]/main/div/div/div/div[3]/button[2]/div[2]/div[2]')
+no_notification.click()
+decline_cookies = chrome_driver.find_element(By.XPATH, '//*[@id="q-586956664"]/div/div[2]/div/div/div[1]/div[2]/button/div[2]/div[2]')
+decline_cookies.click()
+
+for n in range(20):
+    time.sleep(1)
+    try:
+        swipe_right = chrome_driver.find_element(By.CSS_SELECTOR, value='body')
+        swipe_right.send_keys(Keys.RIGHT)
+        swipe_right.send_keys(Keys.ESCAPE)
+    except ElementClickInterceptedException:
+        is_a_match = chrome_driver.find_element(By.XPATH, '//*[@id="c-1089923421"]/div/div/div[1]/div/div'
+                                                             '[4]/button').click()
+    except NoSuchElementException:
+        time.sleep(2)
+
+
+
+
